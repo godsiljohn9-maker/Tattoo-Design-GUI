@@ -23,13 +23,12 @@ This project is **HTML‑only** and meant as a visual/UX showcase.
 ## 🖼️ Screenshots
 
 ### Client Information + Concept Input
-*(Insert screenshot #1 here)*
-
+![Client Info](Screenshot%202026-04-19%20172053.png)
 ### Generated Designs + Size & Estimate
-*(Insert screenshot #2 here)*
+![Generated Designs](Screenshot%202026-04-19%20172109.png)
 
 ### Consent & Release Section
-*(Insert screenshot #3 here)*
+![Consent Form](Screenshot%202026-04-19%20172120.png)
 
 ---
 
