@@ -35,7 +35,7 @@ This project is **HTML‑only** and meant as a visual/UX showcase.
 ## 🛠️ How to Use
 
 1. Download the repository  
-2. Open `index.html` in any browser  
+2.  👉 To use the GUI, click “noname.html” above, then click “Download raw file” and open it in your browser. 
 3. Fill out the form fields  
 4. Enter a tattoo concept  
 5. View the design preview section  
