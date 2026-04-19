@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Courtney's Tats — Shop Kiosk</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=UnifrakturCook:wght@700&family=UnifrakturMaguntia&family=Black+Ops+One&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    --bg-black: #050509;
+    --panel-black: #111018;
+    --neon-red: #ff1744;
+    --deep-red: #8b0000;
+    --neon-purple: #b026ff;
+    --rose-red: #ff003c;
+    --rose-black: #1a0008;
+    --text-muted: #c8c4d0;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(circle at top, #1a001f 0, #050509 45%, #000000 100%);
+    color: #f5f5f5;
+    font-family: "Black Ops One", system-ui, sans-serif;
+    overflow-x: hidden;
+    line-height: 1.45;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image:
+      repeating-linear-gradient(135deg, rgba(255,0,60,0.12) 0, rgba(255,0,60,0.12) 2px, transparent 2px, transparent 10px),
+      repeating-linear-gradient(225deg, rgba(176,38,255,0.12) 0, rgba(176,38,255,0.12) 2px, transparent 2px, transparent 10px);
+    opacity: 0.4;
+    mix-blend-mode: screen;
+    animation: vinesPulse 6s ease-in-out infinite alternate;
+  }
+
+  @keyframes vinesPulse {
+    from { opacity: 0.25; }
+    to   { opacity: 0.55; }
+  }
+
+  .kiosk-container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 30px auto 40px;
+    padding: 20px;
+    position: relative;
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+    position: relative;
+    padding: 25px 10px 15px;
+  }
+
+  .header::before,
+  .header::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle at 30% 30%, var(--rose-red) 0, transparent 55%),
+      radial-gradient(circle at 70% 70%, var(--rose-black) 0, transparent 60%);
+    box-shadow:
+      0 0 18px rgba(255,23,68,0.8),
+      0 0 28px rgba(176,38,255,0.6);
+    opacity: 0.8;
+    filter: blur(0.3px);
+  }
+
+  .header::before {
+    left: 5%;
+    transform: rotate(-18deg);
+  }
+
+  .header::after {
+    right: 5%;
+    transform: rotate(18deg);
+  }
+
+  .shop-name {
+    font-family: "UnifrakturCook", "UnifrakturMaguntia", "Blackletter", serif;
+    font-size: 3.4rem;
+    color: var(--neon-red);
+    text-shadow:
+      0 0 6px rgba(255,23,68,0.9),
+      0 0 14px rgba(176,38,255,0.9),
+      0 0 26px rgba(255,23,68,0.8);
+    margin: 0 0 6px;
+    animation: headerFlicker 3.5s infinite;
+  }
+
+  @keyframes headerFlicker {
+    0%, 18%, 22%, 25%, 53%, 57%, 100% { opacity: 1; }
+    19%, 21%, 24%, 54%, 56% { opacity: 0.3; }
+  }
+
+  .tagline {
+    font-size: 1.05rem;
+    color: var(--neon-purple);
+    text-shadow:
+      0 0 6px rgba(176,38,255,0.9),
+      0 0 14px rgba(255,23,68,0.7);
+    margin: 0 0 8px;
+  }
+
+  .subtag {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-family: system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  .thorn-divider {
+    width: 100%;
+    height: 2px;
+    margin: 18px 0 10px;
+    background-image:
+      linear-gradient(to right,
+        transparent 0,
+        rgba(255,23,68,0.9) 10%,
+        rgba(176,38,255,0.9) 50%,
+        rgba(255,23,68,0.9) 90%,
+        transparent 100%);
+    position: relative;
+  }
+
+  .thorn-divider::before,
+  .thorn-divider::after {
+    content: "";
+    position: absolute;
+    top: -4px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--rose-red) 0, var(--rose-black) 65%, transparent 70%);
+    box-shadow: 0 0 10px rgba(255,23,68,0.8);
+  }
+
+  .thorn-divider::before { left: 8%; }
+  .thorn-divider::after  { right: 8%; }
+
+  .panel {
+    background: radial-gradient(circle at top left, #1b0b16 0, var(--panel-black) 40%, #050509 100%);
+    padding: 20px;
+    margin-bottom: 25px;
+    border-radius: 10px;
+    border: 1px solid rgba(255,23,68,0.35);
+    box-shadow:
+      0 0 12px rgba(0,0,0,0.9),
+      0 0 18px rgba(176,38,255,0.35);
+    position: relative;
+  }
+
+  .panel h2 {
+    font-family: "UnifrakturCook", "UnifrakturMaguntia", serif;
+    color: var(--neon-purple);
+    margin: 0 0 10px;
+    text-shadow:
+      0 0 6px rgba(176,38,255,0.9),
+      0 0 12px rgba(255,23,68,0.7);
+    font-size: 1.55rem;
+  }
+
+  .field-label {
+    display: block;
+    margin-top: 12px;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-family: system-ui, sans-serif;
+    font-weight: 700;
+  }
+
+  .field-label:first-of-type {
+    margin-top: 4px;
+  }
+
+  .field-hint {
+    font-size: 0.72rem;
+    color: #8a8494;
+    font-family: system-ui, sans-serif;
+    font-weight: 500;
+    margin: 4px 0 0;
+  }
+
+  input, textarea, select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    background: #050509;
+    border: 1px solid rgba(176,38,255,0.7);
+    color: #f5f5f5;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: "Black Ops One", system-ui, sans-serif;
+    outline: none;
+    box-shadow: 0 0 8px rgba(176,38,255,0.35);
+  }
+
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--neon-red);
+    box-shadow:
+      0 0 8px rgba(255,23,68,0.8),
+      0 0 16px rgba(176,38,255,0.7);
+  }
+
+  textarea {
+    min-height: 90px;
+    resize: vertical;
+  }
+
+  .row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  @media (max-width: 600px) {
+    .row-2 {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  button {
+    background: radial-gradient(circle at top, var(--neon-red) 0, var(--deep-red) 60%, #2b0000 100%);
+    border: none;
+    padding: 12px 22px;
+    color: white;
+    font-size: 1.05rem;
+    cursor: pointer;
+    border-radius: 999px;
+    margin-top: 15px;
+    font-family: "Black Ops One", system-ui, sans-serif;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    box-shadow:
+      0 0 10px rgba(255,23,68,0.9),
+      0 0 18px rgba(176,38,255,0.7);
+    transition: transform 0.12s ease, box-shadow 0.12s ease, filter 0.12s ease;
+  }
+
+  button:hover:not(:disabled) {
+    transform: translateY(-1px) scale(1.02);
+    filter: brightness(1.1);
+    box-shadow:
+      0 0 14px rgba(255,23,68,1),
+      0 0 24px rgba(176,38,255,0.9);
+  }
+
+  button:active:not(:disabled) {
+    transform: translateY(1px) scale(0.99);
+    filter: brightness(0.9);
+  }
+
+  button:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    filter: grayscale(0.3);
+  }
+
+  button.secondary {
+    background: radial-gradient(circle at top, #3a2a44 0, #1a1220 70%, #0d0810 100%);
+    box-shadow: 0 0 10px rgba(176,38,255,0.5);
+  }
+
+  #status {
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: var(--neon-red);
+    font-family: system-ui, sans-serif;
+    font-weight: 600;
+  }
+
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 15px;
+    margin-top: 10px;
+  }
+
+  .image-grid img {
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 8px;
+    border: 2px solid rgba(176,38,255,0.8);
+    cursor: pointer;
+    transition: 0.18s ease;
+    box-shadow:
+      0 0 10px rgba(0,0,0,0.9),
+      0 0 12px rgba(176,38,255,0.6);
+    object-fit: cover;
+    background: #000;
+  }
+
+  .image-grid img:hover {
+    transform: scale(1.03);
+    border-color: var(--neon-red);
+    box-shadow:
+      0 0 14px rgba(255,23,68,0.9),
+      0 0 22px rgba(176,38,255,0.9);
+  }
+
+  .image-grid img.selected {
+    border-color: var(--neon-red);
+    box-shadow:
+      0 0 16px rgba(255,23,68,1),
+      0 0 26px rgba(176,38,255,1);
+    transform: scale(1.04);
+  }
+
+  details.api-settings {
+    margin-top: 8px;
+    border: 1px solid rgba(176,38,255,0.35);
+    border-radius: 8px;
+    padding: 10px 14px;
+    background: rgba(0,0,0,0.35);
+  }
+
+  details.api-settings summary {
+    cursor: pointer;
+    color: var(--neon-purple);
+    font-size: 0.95rem;
+  }
+
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    font-family: system-ui, sans-serif;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .checkbox-row input {
+    width: auto;
+    margin-top: 0;
+  }
+
+  .btn-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .btn-row button {
+    margin-top: 0;
+  }
+
+  .consent-screen-fields input {
+    font-family: system-ui, sans-serif;
+    font-weight: 600;
+  }
+
+  .legal-block {
+    font-family: system-ui, sans-serif;
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: #e8e4ec;
+    margin: 12px 0;
+  }
+
+  .legal-block strong {
+    color: #fff;
+  }
+
+  .consent-signature-line {
+    border-bottom: 1px solid #333;
+    min-height: 28px;
+    margin-top: 8px;
+  }
+
+  #printArea,
+  #consentPrintArea {
+    display: none;
+    background: #ffffff;
+    color: #000000;
+    padding: 20px;
+    font-family: system-ui, sans-serif;
+  }
+
+  #printArea h2,
+  #consentPrintArea h2 {
+    font-family: "UnifrakturCook", serif;
+    margin-top: 0;
+    color: #000;
+  }
+
+  #ticketQr {
+    margin-top: 15px;
+  }
+
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+    #printArea.print-visible,
+    #printArea.print-visible *,
+    #consentPrintArea.print-visible,
+    #consentPrintArea.print-visible * {
+      visibility: visible;
+    }
+    #printArea.print-visible,
+    #consentPrintArea.print-visible {
+      display: block !important;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .shop-name {
+      font-size: 2.4rem;
+    }
+    .image-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="kiosk-container">
+
+  <header class="header">
+    <h1 class="shop-name">Courtney's Tats</h1>
+    <p class="tagline">Custom Ink • Neon Roses & Thorns</p>
+    <p class="subtag">Walk-ins welcome · Sterile single-use needles · Licensed artists</p>
+  </header>
+
+  <div class="thorn-divider"></div>
+
+  <section class="panel">
+    <h2>Client Information</h2>
+    <p class="field-hint">Used for your ticket and consent form. Have ID ready if you are under 18 (guardian must sign).</p>
+    <label class="field-label" for="clientName">Full legal name</label>
+    <input type="text" id="clientName" placeholder="e.g. Jordan Lee" autocomplete="name">
+    <div class="row-2">
+      <div>
+        <label class="field-label" for="clientPhone">Phone</label>
+        <input type="tel" id="clientPhone" placeholder="(555) 123-4567" autocomplete="tel">
+      </div>
+      <div>
+        <label class="field-label" for="clientEmail">Email (optional)</label>
+        <input type="email" id="clientEmail" placeholder="you@email.com" autocomplete="email">
+      </div>
+    </div>
+    <label class="field-label" for="placement">Placement on body</label>
+    <input type="text" id="placement" placeholder="e.g. Left forearm, inner bicep">
+    <label class="field-label" for="dob">Date of birth</label>
+    <input type="date" id="dob">
+  </section>
+
+  <div class="thorn-divider"></div>
+
+  <section class="panel">
+    <h2>AI Design Studio</h2>
+    <p class="field-hint">Describe style, subject, and mood. Results are inspiration only—your artist will refine the final line work.</p>
+
+    <details class="api-settings">
+      <summary>Studio API setup (optional)</summary>
+      <p class="field-hint" style="margin-top:10px;">
+        <strong>Stability AI</strong> is the default and uses the shop key built into this page—Generate works with no setup. Put a different key here only if you rotate credentials; “Remember” saves the override in this browser only. OpenAI always needs a key below. Do not publish this HTML publicly if it contains a secret key.
+      </p>
+      <label class="field-label" for="providerSelect">Image provider</label>
+      <select id="providerSelect">
+        <option value="stability" selected>Stability AI (Core — default)</option>
+        <option value="openai">OpenAI (DALL·E 3)</option>
+      </select>
+      <label class="field-label" for="apiKeyInput">Override API key (optional for Stability; required for OpenAI)</label>
+      <input type="password" id="apiKeyInput" placeholder="Leave blank to use shop Stability key" autocomplete="off">
+      <div class="checkbox-row">
+        <input type="checkbox" id="rememberKey">
+        <label for="rememberKey">Remember key on this device (kiosk only)</label>
+      </div>
+      <button type="button" class="secondary" id="saveKeyBtn" style="margin-top:12px;">Save API settings</button>
+    </details>
+
+    <label class="field-label" for="tattooPrompt">Tattoo concept</label>
+    <textarea id="tattooPrompt" placeholder="e.g. Neo-traditional rose and dagger, jewel tones, upper arm band, no text"></textarea>
+    <button id="generateBtn" type="button">Generate Designs</button>
+    <div id="status"></div>
+  </section>
+
+  <div class="thorn-divider"></div>
+
+  <section class="panel">
+    <h2>Generated Designs</h2>
+    <p class="field-hint">Tap one design to attach it to your printed ticket.</p>
+    <div id="imageResults" class="image-grid"></div>
+  </section>
+
+  <div class="thorn-divider"></div>
+
+  <section class="panel">
+    <h2>Size & Estimate</h2>
+    <label class="field-label" for="sizeSelect">Piece size</label>
+    <select id="sizeSelect">
+      <option value="">Select Size</option>
+      <option value="small">Small (1–3 inches)</option>
+      <option value="medium">Medium (4–7 inches)</option>
+      <option value="large">Large (8–12 inches)</option>
+    </select>
+
+    <div id="estimateBox" style="margin-top:14px;">
+      <p>Estimated Time: <span id="timeEstimate">—</span></p>
+      <p>Estimated Price: <span id="priceEstimate">—</span></p>
+      <p class="field-hint">Estimates are non-binding; final quote after consult and stencil.</p>
+    </div>
+  </section>
+
+  <div class="thorn-divider"></div>
+
+  <section class="panel">
+    <h2>Consent & Release</h2>
+    <p class="field-hint">Fill in the screen fields, then print for signatures. Have your artist review shop-specific legal language with counsel.</p>
+    <div class="consent-screen-fields">
+      <label class="field-label" for="consentClientPrintName">Client name (for form)</label>
+      <input type="text" id="consentClientPrintName" placeholder="Same as legal name above">
+      <label class="field-label" for="guardianName">Parent / guardian (if minor)</label>
+      <input type="text" id="guardianName" placeholder="Leave blank if client is 18+">
+    </div>
+    <div class="btn-row" style="margin-top:18px;">
+      <button type="button" id="printConsentBtn" class="secondary">Print Consent Form</button>
+    </div>
+  </section>
+
+  <div class="thorn-divider"></div>
+
+  <section class="panel" style="text-align:center;">
+    <div class="btn-row">
+      <button id="printBtn" type="button">Print Consult Ticket</button>
+    </div>
+  </section>
+
+</div>
+
+<!-- PRINT: Ticket -->
+<div id="printArea">
+  <h2>Courtney's Tats — Client Ticket</h2>
+  <p><strong>Name:</strong> <span id="pName"></span></p>
+  <p><strong>Phone:</strong> <span id="pPhone"></span></p>
+  <p><strong>Email:</strong> <span id="pEmail"></span></p>
+  <p><strong>Placement:</strong> <span id="pPlacement"></span></p>
+  <p><strong>Date of birth:</strong> <span id="pDob"></span></p>
+  <p><strong>Size:</strong> <span id="pSize"></span></p>
+  <p><strong>Estimated Time:</strong> <span id="pTime"></span></p>
+  <p><strong>Estimated Price:</strong> <span id="pPrice"></span></p>
+  <p><strong>Design Preview:</strong></p>
+  <img id="pImage" alt="Selected design" style="width: 280px; max-width: 100%; margin-top: 10px; border:1px solid #000;">
+  <div>
+    <p><strong>Ticket QR:</strong></p>
+    <div id="ticketQr"></div>
+  </div>
+  <p style="margin-top:20px;font-size:0.85rem;">Bring this ticket to the front counter. Deposits and scheduling policies apply per shop.</p>
+</div>
+
+<!-- PRINT: Consent -->
+<div id="consentPrintArea">
+  <h2>Tattoo Procedure — Consent, Release & Aftercare Acknowledgment</h2>
+  <p><strong>Studio:</strong> Courtney's Tats</p>
+  <p><strong>Client name:</strong> <span id="cName"></span></p>
+  <p><strong>Date of birth:</strong> <span id="cDob"></span></p>
+  <p><strong>Phone:</strong> <span id="cPhone"></span></p>
+  <p><strong>Planned procedure / placement:</strong> <span id="cPlacement"></span></p>
+  <p><strong>Parent / legal guardian (if under 18):</strong> <span id="cGuardian"></span></p>
+
+  <div class="legal-block">
+    <p><strong>1. Voluntary consent.</strong> I voluntarily consent to receiving a tattoo performed by a licensed professional at the studio named above. I understand the procedure involves breaking the skin and carries inherent risks including but not limited to infection, scarring, allergic reaction to pigments or topicals, and uneven healing.</p>
+    <p><strong>2. Health disclosure.</strong> I confirm I am not under the influence of alcohol or drugs that impair my judgment. I have disclosed relevant medical conditions (including pregnancy, blood disorders, diabetes, skin conditions, immunocompromise, allergies to latex or adhesives, and medications such as blood thinners) to my artist to the best of my knowledge.</p>
+    <p><strong>3. Results & touch-ups.</strong> I understand that tattoo appearance depends on skin type, aftercare, sun exposure, and healing. Fading or need for touch-ups is normal. Additional fees may apply for touch-up work outside the studio's stated policy.</p>
+    <p><strong>4. Minors.</strong> If I am under the age of majority, my parent or legal guardian signing below authorizes this procedure and accepts full responsibility.</p>
+    <p><strong>5. Photography / marketing (optional).</strong> Initial here if you <em>consent</em> to anonymous healed photos for portfolio or social: ________</p>
+    <p><strong>6. Binding agreement.</strong> I have read (or had read to me) this form, had the opportunity to ask questions, and I agree to follow written and verbal aftercare instructions. I release and hold harmless the studio, its owners, and artists from claims arising from my failure to follow aftercare or from undisclosed health conditions, except where prohibited by law.</p>
+  </div>
+
+  <p><strong>Client signature</strong></p>
+  <div class="consent-signature-line"></div>
+  <p style="margin-top:16px;"><strong>Date</strong></p>
+  <div class="consent-signature-line"></div>
+
+  <p style="margin-top:20px;"><strong>Parent / guardian signature (if applicable)</strong></p>
+  <div class="consent-signature-line"></div>
+  <p style="margin-top:16px;"><strong>Date</strong></p>
+  <div class="consent-signature-line"></div>
+
+  <p style="margin-top:24px;font-size:0.82rem;"><em>This template is for operational convenience only and is not legal advice. Have your attorney approve shop-specific language.</em></p>
+</div>
+
+<script>
+  /** Built-in Stability API key (free-tier / shop kiosk). Rotate if this file is ever shared. */
+  const DEFAULT_STABILITY_API_KEY = "sk-C3R8eJLKpPmM8NU8j1MesXRQ8htQN9JtIcTJcmpvAdySyMnl";
+
+  const LS_KEY_OPENAI = "courtney_tats_openai_key";
+  const LS_KEY_STABILITY = "courtney_tats_stability_key";
+
+  const generateBtn = document.getElementById("generateBtn");
+  const imageResults = document.getElementById("imageResults");
+  const statusEl = document.getElementById("status");
+  const providerSelect = document.getElementById("providerSelect");
+  const apiKeyInput = document.getElementById("apiKeyInput");
+  const rememberKey = document.getElementById("rememberKey");
+  const saveKeyBtn = document.getElementById("saveKeyBtn");
+
+  let selectedImage = null;
+
+  function loadStoredKey() {
+    const p = providerSelect.value;
+    const stored = localStorage.getItem(p === "openai" ? LS_KEY_OPENAI : LS_KEY_STABILITY);
+    if (stored) apiKeyInput.value = stored;
+  }
+
+  providerSelect.addEventListener("change", loadStoredKey);
+  loadStoredKey();
+
+  saveKeyBtn.onclick = () => {
+    const key = apiKeyInput.value.trim();
+    const p = providerSelect.value;
+    if (!key) {
+      localStorage.removeItem(p === "openai" ? LS_KEY_OPENAI : LS_KEY_STABILITY);
+      statusEl.textContent = "Cleared stored key for " + (p === "openai" ? "OpenAI" : "Stability") + ".";
+      return;
+    }
+    if (rememberKey.checked) {
+      localStorage.setItem(p === "openai" ? LS_KEY_OPENAI : LS_KEY_STABILITY, key);
+      statusEl.textContent = "API key saved on this device for " + (p === "openai" ? "OpenAI" : "Stability") + ".";
+    } else {
+      statusEl.textContent = "Key kept for this session only (not saved). Click Generate when ready.";
+    }
+  };
+
+  function getApiKey() {
+    const v = apiKeyInput.value.trim();
+    if (v) return v;
+    const p = providerSelect.value;
+    if (p === "openai") {
+      return localStorage.getItem(LS_KEY_OPENAI) || "";
+    }
+    return localStorage.getItem(LS_KEY_STABILITY) || DEFAULT_STABILITY_API_KEY;
+  }
+
+  const STYLE_SUFFIX = ", professional tattoo flash sheet style, clean bold lines, high contrast, suitable for skin art, dark background, no watermark";
+
+  generateBtn.onclick = async () => {
+    const prompt = document.getElementById("tattooPrompt").value.trim();
+    if (!prompt) {
+      statusEl.textContent = "Please describe your tattoo first.";
+      return;
+    }
+    const apiKey = getApiKey();
+    if (!apiKey) {
+      statusEl.textContent = providerSelect.value === "openai"
+        ? "Open “Studio API setup” and enter your OpenAI API key (or save one on this device)."
+        : "No Stability API key configured. Add one under Studio API setup.";
+      return;
+    }
+
+    statusEl.textContent = "Generating designs… this may take a minute.";
+    imageResults.innerHTML = "";
+    selectedImage = null;
+    generateBtn.disabled = true;
+
+    const provider = providerSelect.value;
+    const fullPrompt = prompt + STYLE_SUFFIX;
+
+    let lastError = "";
+    try {
+      for (let i = 0; i < 3; i++) {
+        let imgUrl = null;
+        try {
+          if (provider === "openai") {
+            imgUrl = await generateOpenAI(fullPrompt, apiKey);
+          } else {
+            imgUrl = await generateStability(fullPrompt, apiKey);
+          }
+        } catch (err) {
+          console.error(err);
+          lastError = err.message || String(err);
+        }
+        if (imgUrl) {
+          const img = document.createElement("img");
+          img.src = imgUrl;
+          img.alt = "Generated concept " + (i + 1);
+          img.onclick = () => selectImage(img);
+          imageResults.appendChild(img);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+      lastError = e.message || String(e);
+    } finally {
+      generateBtn.disabled = false;
+    }
+
+    if (imageResults.children.length) {
+      statusEl.textContent = "Tap a design to select it for your ticket.";
+    } else if (lastError) {
+      statusEl.textContent = lastError + " If the browser blocked the call, use a small backend proxy.";
+    } else {
+      statusEl.textContent = "No images returned. Check the key, billing, and network. Browser CORS may block direct API use—try a proxy.";
+    }
+  };
+
+  async function generateOpenAI(prompt, apiKey) {
+    const response = await fetch("https://api.openai.com/v1/images/generations", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + apiKey
+      },
+      body: JSON.stringify({
+        model: "dall-e-3",
+        prompt: prompt.slice(0, 4000),
+        n: 1,
+        size: "1024x1024",
+        response_format: "b64_json"
+      })
+    });
+    const text = await response.text();
+    if (!response.ok) {
+      let msg = "OpenAI error (" + response.status + ").";
+      try {
+        const j = JSON.parse(text);
+        if (j.error && j.error.message) msg = j.error.message;
+      } catch (_) {}
+      throw new Error(msg);
+    }
+    const data = JSON.parse(text);
+    const b64 = data.data && data.data[0] && data.data[0].b64_json;
+    if (!b64) throw new Error("Unexpected OpenAI response.");
+    return "data:image/png;base64," + b64;
+  }
+
+  async function generateStability(prompt, apiKey) {
+    const formData = new FormData();
+    formData.append("prompt", prompt);
+    formData.append("output_format", "png");
+
+    const response = await fetch("https://api.stability.ai/v2beta/stable-image/generate/core", {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + apiKey,
+        "Accept": "image/png"
+      },
+      body: formData
+    });
+
+    if (!response.ok) {
+      const errText = await response.text();
+      console.error("Stability error:", errText);
+      let msg = "Stability AI error (" + response.status + ").";
+      try {
+        const j = JSON.parse(errText);
+        if (j.message) msg = j.message;
+        else if (j.errors && j.errors[0] && j.errors[0].message) msg = j.errors[0].message;
+      } catch (_) {}
+      throw new Error(msg);
+    }
+
+    const blob = await response.blob();
+    return URL.createObjectURL(blob);
+  }
+
+  function selectImage(img) {
+    document.querySelectorAll(".image-grid img").forEach(i => i.classList.remove("selected"));
+    img.classList.add("selected");
+    selectedImage = img.src;
+  }
+
+  const sizeSelect = document.getElementById("sizeSelect");
+  sizeSelect.onchange = () => {
+    const size = sizeSelect.value;
+    let time = "";
+    let price = "";
+
+    if (size === "small") { time = "1–2 hours"; price = "$80–$150"; }
+    if (size === "medium") { time = "2–4 hours"; price = "$150–$300"; }
+    if (size === "large") { time = "4–8 hours"; price = "$300–$600"; }
+
+    document.getElementById("timeEstimate").innerText = time || "—";
+    document.getElementById("priceEstimate").innerText = price || "—";
+  };
+
+  function syncConsentNameFromClient() {
+    const cn = document.getElementById("consentClientPrintName");
+    if (!cn.value.trim()) {
+      cn.value = document.getElementById("clientName").value.trim();
+    }
+  }
+
+  document.getElementById("printConsentBtn").onclick = () => {
+    syncConsentNameFromClient();
+    const name = document.getElementById("consentClientPrintName").value.trim() || document.getElementById("clientName").value.trim();
+    const phone = document.getElementById("clientPhone").value.trim();
+    const placement = document.getElementById("placement").value.trim();
+    const dob = document.getElementById("dob").value;
+    const guardian = document.getElementById("guardianName").value.trim();
+
+    if (!name) {
+      alert("Please enter a client name for the consent form.");
+      return;
+    }
+
+    document.getElementById("cName").innerText = name;
+    document.getElementById("cPhone").innerText = phone || "—";
+    document.getElementById("cPlacement").innerText = placement || "—";
+    document.getElementById("cDob").innerText = dob || "—";
+    document.getElementById("cGuardian").innerText = guardian || "—";
+
+    const ticketEl = document.getElementById("printArea");
+    const consentEl = document.getElementById("consentPrintArea");
+    ticketEl.classList.remove("print-visible");
+    consentEl.classList.add("print-visible");
+
+    window.print();
+
+    consentEl.classList.remove("print-visible");
+  };
+
+  const printBtn = document.getElementById("printBtn");
+  printBtn.onclick = () => {
+    const name = document.getElementById("clientName").value.trim();
+    const phone = document.getElementById("clientPhone").value.trim();
+    const email = document.getElementById("clientEmail").value.trim();
+    const placement = document.getElementById("placement").value.trim();
+    const dob = document.getElementById("dob").value;
+    const size = document.getElementById("sizeSelect").value;
+    const time = document.getElementById("timeEstimate").innerText;
+    const price = document.getElementById("priceEstimate").innerText;
+
+    if (!name || !phone || !size || !selectedImage) {
+      alert("Please fill in name, phone, select size, and choose a design before printing the ticket.");
+      return;
+    }
+
+    document.getElementById("pName").innerText = name;
+    document.getElementById("pPhone").innerText = phone;
+    document.getElementById("pEmail").innerText = email || "—";
+    document.getElementById("pPlacement").innerText = placement || "—";
+    document.getElementById("pDob").innerText = dob || "—";
+    document.getElementById("pSize").innerText = size;
+    document.getElementById("pTime").innerText = time;
+    document.getElementById("pPrice").innerText = price;
+    document.getElementById("pImage").src = selectedImage;
+
+    const ticketData = { name, phone, email, placement, dob, size, time, price };
+    const qrContainer = document.getElementById("ticketQr");
+    qrContainer.innerHTML = "";
+    new QRCode(qrContainer, {
+      text: JSON.stringify(ticketData),
+      width: 128,
+      height: 128
+    });
+
+    const ticketEl = document.getElementById("printArea");
+    const consentEl = document.getElementById("consentPrintArea");
+    consentEl.classList.remove("print-visible");
+    ticketEl.classList.add("print-visible");
+
+    window.print();
+
+    ticketEl.classList.remove("print-visible");
+  };
+</script>
+
+</body>
+</html>
